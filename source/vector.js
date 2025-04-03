@@ -1,7 +1,7 @@
 class Vector {
     #x; #y; #x_comp; #y_comp; #thickness; #color; #name; #arrowSize
     
-    constructor(x_pos, y_pos, x_comp, y_comp, thickness = 3, color = 'black', name = 'unnamed', arrowSize = 10) {
+    constructor(x_pos, y_pos, x_comp, y_comp, thickness = canvasWidth/100, color = 'black', name = 'unnamed', arrowSize = canvasWidth/70) {
         this.#x = x_pos;
         this.#y = y_pos;
         this.#x_comp = x_comp;
@@ -18,7 +18,7 @@ class Vector {
         }
         switch (attribute) {
             case 'x': 
-                return this.#x;
+                return this.#x; 
             case 'y': 
                 return this.#y;
             case 'x_comp': 
@@ -92,8 +92,10 @@ class Vector {
     }
 
     negate() {
-        this.scalar(-1);
+        this.setVector('x_comp', -this.getVector('x_comp'));
+        this.setVector('y_comp', -this.getVector('y_comp'));
     }
+    
 
     dotProduct(inputVector) {
         let dotX = inputVector.getVector('x_comp') * this.getVector('x_comp');

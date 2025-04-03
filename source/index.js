@@ -1,16 +1,30 @@
-let fish;
+let fish1; let fish2; 
+let canvasWidth;
+let canvasHeight;
+
+function getRandomColor() {
+    let r = random(255); 
+    let g = random(255); 
+    let b = random(255); 
+    return color(r, g, b);
+  }
 
 function setup() {
-    let canvasWidth = 400;
-    let canvasHeight = 400;
+    canvasWidth = windowWidth * 0.5;
+    canvasHeight = windowHeight * 0.5;
     createCanvas(canvasWidth, canvasHeight);
-    fish = new Fish();
+    fish1 = new Fish();  
+    fish2 = new Fish();
 }
 
 function draw() {
     background(200);
-    
+    fish1.appear();
+    fish1.update();
 
+    fish2.appear();
+    fish2.update();
 }
+
 
 
