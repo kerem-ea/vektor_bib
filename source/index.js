@@ -1,8 +1,8 @@
 let fishArray = [];
 let canvasWidth;
 let canvasHeight;
-let alignmentConstant = 20;
-let cohesionConstant = 20;
+let alignmentConstant = 16;
+let cohesionConstant = 16;
 let separationConstant = 5;
 
 function getRandomColor() {

@@ -44,7 +44,21 @@ class Fish {
     
     appear() {
         fill(this.#color);
-        circle(this.#pos.getVector('x'), this.#pos.getVector('y'), this.#radius * 2);
+        let angle = atan2(this.#vel.getVector('y_comp'), this.#vel.getVector('x_comp'));
+        
+        push();
+        translate(this.#pos.getVector('x'), this.#pos.getVector('y'));
+        rotate(angle);
+        ellipse(0, 0, this.#radius * 2, this.#radius);
+        
+        let tailWidth = this.#radius * 1.5;
+        let tailHeight = this.#radius;
+        triangle(
+            -this.#radius, 0, 
+            -this.#radius - tailWidth, -tailHeight / 2, 
+            -this.#radius - tailWidth, tailHeight / 2  
+        );
+        pop();
     }
 
     cohesion(fishArray) {
