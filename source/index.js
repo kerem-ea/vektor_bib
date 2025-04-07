@@ -1,6 +1,9 @@
-let fish1; let fish2; 
+let fishArray = [];
 let canvasWidth;
 let canvasHeight;
+let alignmentConstant = 20;
+let cohesionConstant = 20;
+let separationConstant = 5;
 
 function getRandomColor() {
     let r = random(255); 
@@ -9,21 +12,24 @@ function getRandomColor() {
     return color(r, g, b);
   }
 
-function setup() {
+  function setup() {
     canvasWidth = windowWidth * 0.5;
     canvasHeight = windowHeight * 0.5;
     createCanvas(canvasWidth, canvasHeight);
-    fish1 = new Fish();  
-    fish2 = new Fish();
+    
+    for (let i = 0; i < 10; i++) {
+        fishArray.push(new Fish());
+    }
 }
 
 function draw() {
-    background(200);
-    fish1.appear();
-    fish1.update();
+    background(100, 150, 255);
 
-    fish2.appear();
-    fish2.update();
+    for (let i = 0; i < fishArray.length; i++) {
+        let fish = fishArray[i];
+        fish.appear();
+        fish.update();
+    }
 }
 
 
