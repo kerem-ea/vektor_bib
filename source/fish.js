@@ -19,13 +19,20 @@ class Fish {
 
     limitSpeed() {
         let speed = this.#vel.getVector('length');
-        let maxSpeed = 5; 
+        let maxSpeed = 10; 
+        let minSpeed = 1;
     
         if (speed > maxSpeed) {
             let scale = maxSpeed / speed; 
             this.#vel = this.#vel.scalar(scale); 
+        } 
+        
+        else if (speed < minSpeed) {
+            let scale = minSpeed / speed;  
+            this.#vel = this.#vel.scalar(scale); 
         }
     }
+    
 
     boundaryCheck() {
         let marginX = canvasWidth / 16;  
