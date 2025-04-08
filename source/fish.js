@@ -19,8 +19,8 @@ class Fish {
 
     limitSpeed() {
         let speed = this.#vel.getVector('length');
-        let maxSpeed = 10; 
-        let minSpeed = 1;
+        let maxSpeed = 4; 
+        let minSpeed = 3;
     
         if (speed > maxSpeed) {
             let scale = maxSpeed / speed; 
