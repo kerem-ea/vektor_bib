@@ -1,12 +1,28 @@
 class Fish {
-    #pos; #vel; #radius; #color; #acc;
+    #pos; #vel; #size; #color; #acc;
 
     constructor() {
         this.#pos = new Vector(canvasWidth/2, canvasWidth/2, random(-canvasWidth/100, canvasWidth/100), random(-canvasWidth/100, canvasWidth/100));
         this.#vel = new Vector(0, 0, random(-canvasWidth/300, canvasWidth/300), random(-canvasWidth/300, canvasWidth/300));
-        this.#radius = canvasWidth/100;
+        this.#size = canvasWidth/100;
         this.#color = getRandomColor();
         this.#acc = null;
+    }
+
+    getPosition() {
+        return this.#pos;
+    }
+
+    getVelocity() {
+        return this.#vel;
+    }
+
+    getRadius() {
+        return this.#size;
+    }
+
+    getColor() {
+        return this.#color;
     }
 
     update() {
@@ -38,14 +54,14 @@ class Fish {
         let marginX = canvasWidth / 16;  
         let marginY = canvasHeight / 16; 
     
-        if (this.#pos.getVector('x') - this.#radius < marginX || this.#pos.getVector('x') + this.#radius > canvasWidth - marginX) {
+        if (this.#pos.getVector('x') - this.#size < marginX || this.#pos.getVector('x') + this.#size > canvasWidth - marginX) {
             this.#vel.setVector('x_comp', -this.#vel.getVector('x_comp')); 
-            this.#pos.setVector('x', constrain(this.#pos.getVector('x'), this.#radius + marginX, canvasWidth - this.#radius - marginX));
+            this.#pos.setVector('x', constrain(this.#pos.getVector('x'), this.#size + marginX, canvasWidth - this.#size - marginX));
         }
     
-        if (this.#pos.getVector('y') - this.#radius < marginY || this.#pos.getVector('y') + this.#radius > canvasHeight - marginY) {
+        if (this.#pos.getVector('y') - this.#size < marginY || this.#pos.getVector('y') + this.#size > canvasHeight - marginY) {
             this.#vel.setVector('y_comp', -this.#vel.getVector('y_comp')); 
-            this.#pos.setVector('y', constrain(this.#pos.getVector('y'), this.#radius + marginY, canvasHeight - this.#radius - marginY));
+            this.#pos.setVector('y', constrain(this.#pos.getVector('y'), this.#size + marginY, canvasHeight - this.#size - marginY));
         }
     }
     
@@ -56,16 +72,20 @@ class Fish {
         push();
         translate(this.#pos.getVector('x'), this.#pos.getVector('y'));
         rotate(angle);
-        ellipse(0, 0, this.#radius * 2, this.#radius);
+        ellipse(0, 0, this.#size * 2, this.#size);
         
-        let tailWidth = this.#radius * 1.5;
-        let tailHeight = this.#radius;
+        let tailWidth = this.#size * 1.5;
+        let tailHeight = this.#size;
         triangle(
-            -this.#radius, 0, 
-            -this.#radius - tailWidth, -tailHeight / 2, 
-            -this.#radius - tailWidth, tailHeight / 2  
+            -this.#size, 0, 
+            -this.#size - tailWidth, -tailHeight / 2, 
+            -this.#size - tailWidth, tailHeight / 2  
         );
         pop();
+
+        if (this === typeof PredatorFish) {
+            fill(255, 0, 0); // Virker ikke
+        }
     }
 
     cohesion(fishArray) {
@@ -142,7 +162,45 @@ class Fish {
     }
 }
 
-class PredatorFish extends Fish {}
+class PredatorFish extends Fish {
+    #aggro;
+
+    constructor() {
+        super();
+        this.#aggro = random(1, 10);
+    }
+
+    chase(fishArray) {
+        let closestPrey = null;
+        let minDistance = Infinity;
+
+        for (let i = 0; i < fishArray.length; i++) {
+            let otherFish = fishArray[i];
+            if (otherFish instanceof PreyFish) {
+                let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'),
+                    otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    closestPrey = otherFish;
+                }
+            }
+        }
+
+        if (closestPrey) {
+            let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'),
+                closestPrey.getPosition().getVector('x') - this.getPosition().getVector('x'),
+                closestPrey.getPosition().getVector('y') - this.getPosition().getVector('y'));
+
+            this.getVelocity().add(direction.scalar(0.1 * this.#aggro));
+        }
+    }
+
+    flock(fishArray) {
+        this.chase(fishArray);
+    }
+}
+
+
 class PreyFish extends Fish {}
 
 

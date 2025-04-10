@@ -42,8 +42,11 @@ function setup() {
     createCanvas(canvasWidth, canvasHeight);
     drawSliders();
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i < 5; i++) {
         fishArray.push(new Fish());
+        if (i % 5 === 0) {
+            fishArray.push(new PredatorFish());
+        }
     }
 }
 
