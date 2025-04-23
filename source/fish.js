@@ -1,199 +1,216 @@
 class Fish {
-    #pos; #vel; #size; #color; 
+  #pos; #vel; #size; #color;
 
-    constructor() {
-        this.#pos = new Vector(canvasWidth/2, canvasWidth/2, random(-canvasWidth/100, canvasWidth/100), random(-canvasWidth/100, canvasWidth/100));
-        this.#vel = new Vector(0, 0, random(-canvasWidth/300, canvasWidth/300), random(-canvasWidth/300, canvasWidth/300));
-        this.#size = canvasWidth/100;
-        this.#color = getRandomColor();
-    }
+  constructor() {
+    this.#pos = new Vector(canvasWidth/2, canvasWidth/2, random(-canvasWidth/100, canvasWidth/100), random(-canvasWidth/100, canvasWidth/100));
+    this.#vel = new Vector(0, 0, random(-canvasWidth/300, canvasWidth/300), random(-canvasWidth/300, canvasWidth/300));
+    this.#size = canvasWidth/100;
+    this.#color = getRandomColor("Prey");
+  }
 
-    getPosition() {
-        return this.#pos;
-    }
+  getPosition() {
+    return this.#pos;
+  }
 
-    getVelocity() {
-        return this.#vel;
-    }
+  getVelocity() {
+    return this.#vel;
+  }
 
-    getRadius() {
-        return this.#size;
-    }
+  getRadius() {
+    return this.#size;
+  }
 
-    getColor() {
-        return this.#color;
-    }
+  getColor() {
+    return this.#color;
+  }
 
-    update() {
-        this.#pos.setVector('x', this.#pos.getVector('x') + this.#vel.getVector('x_comp'));
-        this.#pos.setVector('y', this.#pos.getVector('y') + this.#vel.getVector('y_comp'));
-        this.boundaryCheck();
-        this.flock(fishArray);
-        this.limitSpeed();  
-    }
+  setVelocity(newVel) {
+    this.#vel = newVel;
+  }
 
-    limitSpeed() {
-        let speed = this.#vel.getVector('length');
-        let maxSpeed = 4; 
-        let minSpeed = 2;
+  setColor(newColor) {
+    this.#color = newColor;
+  }
+
+  update() {
+    this.#pos.setVector('x', this.#pos.getVector('x') + this.#vel.getVector('x_comp'));
+    this.#pos.setVector('y', this.#pos.getVector('y') + this.#vel.getVector('y_comp'));
+    this.boundaryCheck();
+    this.limitSpeed();
+  }
+
+  limitSpeed() {
+    let speed = this.#vel.getVector('length');
     
-        if (speed > maxSpeed) {
-            let scale = maxSpeed / speed; 
-            this.#vel = this.#vel.scalar(scale); 
-        } 
-        
-        else if (speed < minSpeed) {
-            let scale = minSpeed / speed;  
-            this.#vel = this.#vel.scalar(scale); 
-        }
+    let maxSpeed = this instanceof PredatorFish ? 2 : 6;
+    let minSpeed = 2;
+  
+    if (speed > maxSpeed) {
+      let scale = maxSpeed / speed;
+      this.#vel = this.#vel.scalar(scale);
+    } 
+    
+    else if (speed < minSpeed) {
+      let scale = minSpeed / speed;
+      this.#vel = this.#vel.scalar(scale);
     }
-    
-    boundaryCheck() {
-        let marginX = canvasWidth / 16;  
-        let marginY = canvasHeight / 16; 
-    
-        if (this.#pos.getVector('x') - this.#size < marginX || this.#pos.getVector('x') + this.#size > canvasWidth - marginX) {
-            this.#vel.setVector('x_comp', -this.#vel.getVector('x_comp')); 
-            this.#pos.setVector('x', constrain(this.#pos.getVector('x'), this.#size + marginX, canvasWidth - this.#size - marginX));
-        }
-    
-        if (this.#pos.getVector('y') - this.#size < marginY || this.#pos.getVector('y') + this.#size > canvasHeight - marginY) {
-            this.#vel.setVector('y_comp', -this.#vel.getVector('y_comp')); 
-            this.#pos.setVector('y', constrain(this.#pos.getVector('y'), this.#size + marginY, canvasHeight - this.#size - marginY));
-        }
+  }
+
+  boundaryCheck() {
+    let marginX = canvasWidth / 16;
+    let marginY = canvasHeight / 16;
+    if (this.#pos.getVector('x') - this.#size < marginX || this.#pos.getVector('x') + this.#size > canvasWidth - marginX) {
+      this.#vel.setVector('x_comp', -this.#vel.getVector('x_comp'));
+      this.#pos.setVector('x', constrain(this.#pos.getVector('x'), this.#size + marginX, canvasWidth - this.#size - marginX));
     }
-    
-    appear() {
-        fill(this.#color);
-        let angle = atan2(this.#vel.getVector('y_comp'), this.#vel.getVector('x_comp'));
-        
-        push();
-        translate(this.#pos.getVector('x'), this.#pos.getVector('y'));
-        rotate(angle);
-        ellipse(0, 0, this.#size * 2, this.#size);
-        
-        let tailWidth = this.#size * 1.5;
-        let tailHeight = this.#size;
-        triangle(
-            -this.#size, 0, 
-            -this.#size - tailWidth, -tailHeight / 2, 
-            -this.#size - tailWidth, tailHeight / 2  
-        );
-        pop();
+    if (this.#pos.getVector('y') - this.#size < marginY || this.#pos.getVector('y') + this.#size > canvasHeight - marginY) {
+      this.#vel.setVector('y_comp', -this.#vel.getVector('y_comp'));
+      this.#pos.setVector('y', constrain(this.#pos.getVector('y'), this.#size + marginY, canvasHeight - this.#size - marginY));
     }
+  }
+  
+  appear() {
+    fill(this.#color);
+    let angle = atan2(this.#vel.getVector('y_comp'), this.#vel.getVector('x_comp'));
+    push();
+    translate(this.#pos.getVector('x'), this.#pos.getVector('y'));
+    rotate(angle);
+    ellipse(0, 0, this.#size * 2, this.#size);
+    let tailWidth = this.#size * 1.5;
+    let tailHeight = this.#size;
+    triangle(-this.#size, 0, -this.#size - tailWidth, -tailHeight / 2, -this.#size - tailWidth, tailHeight / 2);
+    pop();
+  }
 }
-
 
 class PredatorFish extends Fish {
-    #aggro;
+  #aggro; #PredatorColor;
+  constructor() {
+    super();
+    this.#aggro = random(0.5, 2);
+    this.setColor(getRandomColor("Pred"));
+  }
 
-    constructor() {
-        super();
-        this.#aggro = random(1, 10);
-    }
-
-    chase(fishArray) {
-        let closestPrey = null;
-        let minDistance = Infinity;
-
-        for (let i = 0; i < fishArray.length; i++) {
-            let otherFish = fishArray[i];
-            if (otherFish instanceof PreyFish) {
-                let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'),
-                    otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
-                if (distance < minDistance) {
-                    minDistance = distance;
-                    closestPrey = otherFish;
-                }
-            }
+  chase(fishArray) {
+    let chaseRadius = 150;
+    let predatorPos = this.getPosition();
+  
+    let nearestPrey = null;
+    let shortestDist = Infinity;
+  
+    for (let fish of fishArray) {
+      if (fish instanceof PreyFish) {
+        let preyPos = fish.getPosition();
+        let d = dist(
+          predatorPos.getVector('x'), predatorPos.getVector('y'),
+          preyPos.getVector('x'), preyPos.getVector('y')
+        );
+  
+        if (d < chaseRadius && d < shortestDist) {
+          shortestDist = d;
+          nearestPrey = fish;
         }
-
-        if (closestPrey) {
-            let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'),
-                closestPrey.getPosition().getVector('x') - this.getPosition().getVector('x'),
-                closestPrey.getPosition().getVector('y') - this.getPosition().getVector('y'));
-
-            this.getVelocity().add(direction.scalar(0.1 * this.#aggro));
-        }
+      }
     }
+  
+    if (nearestPrey) {
+      let preyPos = nearestPrey.getPosition();
+      let dx = preyPos.getVector('x') - predatorPos.getVector('x');
+      let dy = preyPos.getVector('y') - predatorPos.getVector('y');
+      let chaseVec = new Vector(
+        predatorPos.getVector('x'),
+        predatorPos.getVector('y'),
+        dx,
+        dy
+      );
+      this.setVelocity(this.getVelocity().add(chaseVec.scalar(0.02 * this.#aggro)));
+    }
+  }  
 }
 
-
 class PreyFish extends Fish {
-    constructor() {
-        super();
+  constructor() {
+    super();
+  }
+  cohesion(fishArray) {
+    let centerOfMass = new Vector(0, 0, 0, 0);
+    let total = 0;
+    
+    for (let i = 0; i < fishArray.length; i++) {
+      let otherFish = fishArray[i];
+      let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'), otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
+      if (distance > 0 && distance < cohesionConstant) {
+        centerOfMass.setVector('x', centerOfMass.getVector('x') + otherFish.getPosition().getVector('x'));
+        centerOfMass.setVector('y', centerOfMass.getVector('y') + otherFish.getPosition().getVector('y'));
+        total++;
+      }
     }
 
-    cohesion(fishArray) {
-        let centerOfMass = new Vector(0, 0, 0, 0);
-        let total = 0;
-    
-        for (let i = 0; i < fishArray.length; i++) {
-            let otherFish = fishArray[i];
-            let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'), otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
-            if (distance > 0 && distance < cohesionConstant) {
-                centerOfMass.setVector('x', centerOfMass.getVector('x') + otherFish.getPosition().getVector('x'));
-                centerOfMass.setVector('y', centerOfMass.getVector('y') + otherFish.getPosition().getVector('y'));
-                total++;
-            }
-        }
-    
-        if (total > 0) {
-            centerOfMass.setVector('x', centerOfMass.getVector('x') / total);
-            centerOfMass.setVector('y', centerOfMass.getVector('y') / total);
-            let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), centerOfMass.getVector('x') - this.getPosition().getVector('x'), centerOfMass.getVector('y') - this.getPosition().getVector('y'));
-            this.getVelocity().add(direction.scalar(0.005)); 
-        }
+    if (total > 0) {
+      centerOfMass.setVector('x', centerOfMass.getVector('x') / total);
+      centerOfMass.setVector('y', centerOfMass.getVector('y') / total);
+      let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), centerOfMass.getVector('x') - this.getPosition().getVector('x'), centerOfMass.getVector('y') - this.getPosition().getVector('y'));
+      const newV = this.getVelocity().add(direction.scalar(0.005));
+      this.setVelocity(newV);
     }
-    
-    alignment(fishArray) {
-        let avgVel = new Vector(0, 0, 0, 0);
-        let total = 0;
-    
-        for (let i = 0; i < fishArray.length; i++) {
-            let otherFish = fishArray[i];
-            let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'), otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
-            if (distance > 0 && distance < alignmentConstant) {
-                avgVel.setVector('x_comp', avgVel.getVector('x_comp') + otherFish.getVelocity().getVector('x_comp'));
-                avgVel.setVector('y_comp', avgVel.getVector('y_comp') + otherFish.getVelocity().getVector('y_comp'));
-                total++;
-            }
-        }
-    
-        if (total > 0) {
-            avgVel.setVector('x_comp', avgVel.getVector('x_comp') / total);
-            avgVel.setVector('y_comp', avgVel.getVector('y_comp') / total);
-    
-            let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), avgVel.getVector('x_comp') - this.getVelocity().getVector('x_comp'), avgVel.getVector('y_comp') - this.getVelocity().getVector('y_comp'));
-            this.getVelocity().add(direction.scalar(0.005)); 
-        }
-    }
-    
-    separation(fishArray) {
-        let steer = new Vector(0, 0, 0, 0);
-        let total = 0;
-    
-        for (let i = 0; i < fishArray.length; i++) {
-            let otherFish = fishArray[i];
-            let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'), otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
-    
-            if (distance > 0 && distance < separationConstant) {
-                let diff = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), this.getPosition().getVector('x') - otherFish.getPosition().getVector('x'), this.getPosition().getVector('y') - otherFish.getPosition().getVector('y'));
-                steer = steer.add(diff.scalar(1 / distance)); 
-                total++;
-            }
-        }
-    
-        if (total > 0) {
-            steer = steer.scalar(1 / total);
-        }
-    
-        this.getVelocity().add(steer.scalar(0.1)); 
+  }
+
+  alignment(fishArray) {
+    let avgVel = new Vector(0, 0, 0, 0);
+    let total = 0;
+    for (let i = 0; i < fishArray.length; i++) {
+      let otherFish = fishArray[i];
+      let distance = dist(this.getPosition().getVector('x'), this.getPosition().getVector('y'), otherFish.getPosition().getVector('x'), otherFish.getPosition().getVector('y'));
+      if (distance > 0 && distance < alignmentConstant) {
+        avgVel.setVector('x_comp', avgVel.getVector('x_comp') + otherFish.getVelocity().getVector('x_comp'));
+        avgVel.setVector('y_comp', avgVel.getVector('y_comp') + otherFish.getVelocity().getVector('y_comp'));
+        total++;
+      }
     }
 
-    flock(fishArray) {
-        this.cohesion(fishArray);
-        this.alignment(fishArray);
-        this.separation(fishArray);
+    if (total > 0) {
+      avgVel.setVector('x_comp', avgVel.getVector('x_comp') / total);
+      avgVel.setVector('y_comp', avgVel.getVector('y_comp') / total);
+      let direction = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), avgVel.getVector('x_comp') - this.getVelocity().getVector('x_comp'), avgVel.getVector('y_comp') - this.getVelocity().getVector('y_comp'));
+      const newV = this.getVelocity().add(direction.scalar(0.005));
+      this.setVelocity(newV);
     }
+  }
+
+  separation(fishArray) {
+    let steer = new Vector(0, 0, 0, 0);
+    let total = 0;
+  
+    for (let i = 0; i < fishArray.length; i++) {
+      let otherFish = fishArray[i];
+      let distance = dist(
+        this.getPosition().getVector('x'),
+        this.getPosition().getVector('y'),
+        otherFish.getPosition().getVector('x'),
+        otherFish.getPosition().getVector('y')
+      );
+  
+      if (distance > 0 && distance < separationConstant) {
+        let dx = this.getPosition().getVector('x') - otherFish.getPosition().getVector('x');
+        let dy = this.getPosition().getVector('y') - otherFish.getPosition().getVector('y');
+        let diff = new Vector(this.getPosition().getVector('x'), this.getPosition().getVector('y'), dx, dy);
+  
+        let forceMultiplier = otherFish instanceof PredatorFish ? 10 : 1;
+        steer = steer.add(diff.scalar((forceMultiplier) / distance));
+        total++;
+      }
+    }
+  
+    if (total > 0) {
+      steer = steer.scalar(1 / total);
+      const newV = this.getVelocity().add(steer.scalar(0.1));
+      this.setVelocity(newV);
+    }
+  }
+  
+  flock(fishArray) {
+    this.cohesion(fishArray);
+    this.alignment(fishArray);
+    this.separation(fishArray);
+  }
 }
