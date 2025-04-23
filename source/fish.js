@@ -82,10 +82,12 @@ class Fish {
             -this.#size - tailWidth, tailHeight / 2  
         );
         pop();
-
+        
+        /*
         if (this === typeof PredatorFish) {
             fill(255, 0, 0); // Virker ikke
         }
+        */
     }
 
     cohesion(fishArray) {
@@ -162,6 +164,7 @@ class Fish {
     }
 }
 
+/*
 class PredatorFish extends Fish {
     #aggro;
 
@@ -203,5 +206,5 @@ class PredatorFish extends Fish {
 
 class PreyFish extends Fish {}
 
-
+*/
 

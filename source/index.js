@@ -44,9 +44,12 @@ function setup() {
 
     for (let i = 0; i < 5; i++) {
         fishArray.push(new Fish());
+        
+        /*
         if (i % 5 === 0) {
             fishArray.push(new PredatorFish());
         }
+        */
     }
 }
 
