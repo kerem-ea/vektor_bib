@@ -8,9 +8,9 @@ let separationConstant = 1;
 let sliders = [];
 
 function getRandomColor() {
-    let r = random(255); 
-    let g = random(255); 
-    let b = random(255); 
+    let r = random(10, 30); 
+    let g = random(100, 200); 
+    let b = random(10, 30); 
     return color(r, g, b);
 }
 
@@ -44,22 +44,16 @@ function setup() {
 
     for (let i = 0; i < 5; i++) {
         fishArray.push(new Fish());
-        
-        /*
-        if (i % 5 === 0) {
-            fishArray.push(new PredatorFish());
-        }
-        */
     }
 }
 
 function draw() {
-    background(100, 150, 255);
+    background(15, 8, 50);
 
     for (let i = 0; i < sliders.length; i++) {
         let sliderObj = sliders[i];
         push();
-        fill(0, 0, 0);
+        fill(255, 255, 255);
         textSize(windowWidth * 0.01)
         textAlign(LEFT, CENTER);
         text(sliderObj.label, sliderObj.slider.x + sliderObj.slider.width, sliderObj.slider.y + sliderObj.slider.height / 2);
