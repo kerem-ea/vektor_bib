@@ -32,6 +32,10 @@ class Fish {
     this.#color = newColor;
   }
 
+  getSize() {
+    return this.#size;
+  }
+
   update() {
     this.#pos.setVector('x', this.#pos.getVector('x') + this.#vel.getVector('x_comp'));
     this.#pos.setVector('y', this.#pos.getVector('y') + this.#vel.getVector('y_comp'));
@@ -85,10 +89,11 @@ class Fish {
 
 class PredatorFish extends Fish {
   #aggro; #PredatorColor;
+  
   constructor() {
     super();
     this.#aggro = random(0.5, 2);
-    this.#PredatorColor = this.setColor(getRandomColor("Pred"));
+    this.#PredatorColor = getRandomColor("Pred");
   }
 
   chase(fishArray) {
@@ -126,6 +131,19 @@ class PredatorFish extends Fish {
       this.setVelocity(this.getVelocity().add(chaseVec.scalar(0.02 * this.#aggro)));
     }
   }  
+
+  appear() {
+    fill(this.#PredatorColor);
+    let angle = atan2(this.getVelocity().getVector('y_comp'), this.getVelocity().getVector('x_comp'));
+    push();
+    translate(this.getPosition().getVector('x'), this.getPosition().getVector('y'));
+    rotate(angle);
+    ellipse(0, 0, this.getSize() * 3, this.getSize());
+    let tailWidth = this.getSize() * 2;
+    let tailHeight = this.getSize() * 1.5;
+    triangle(-this.getSize(), 0, -this.getSize() - tailWidth, -tailHeight / 2, -this.getSize() - tailWidth, tailHeight / 2);
+    pop();
+  }
 }
 
 class PreyFish extends Fish {
