@@ -57,7 +57,6 @@ class Vector {
                 this.#arrowSize = value; break;
             default: return null;
         }
-        // console.log(`Updated ${this.#name}'s ${attribute} to`, value);
         return value;
     }
 

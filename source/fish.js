@@ -88,7 +88,7 @@ class PredatorFish extends Fish {
   constructor() {
     super();
     this.#aggro = random(0.5, 2);
-    this.setColor(getRandomColor("Pred"));
+    this.#PredatorColor = this.setColor(getRandomColor("Pred"));
   }
 
   chase(fishArray) {
