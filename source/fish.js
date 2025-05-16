@@ -46,8 +46,8 @@ class Fish {
   limitSpeed() {
     const speed = this.#vel.getVector('length');
     const isPredator = this instanceof PredatorFish;
-    const minSpeed = 2;
-    const maxSpeed = isPredator ? 2 : 6;
+    const minSpeed = 1;
+    const maxSpeed = isPredator ? 1.5 : 3;
     if (speed > maxSpeed || speed < minSpeed) {
       const target = speed > maxSpeed ? maxSpeed : minSpeed;
       this.#vel = this.#vel.scalar(target / speed);
@@ -68,15 +68,26 @@ class Fish {
   }
   
   appear() {
-    fill(this.#color);
-    let angle = atan2(this.#vel.getVector('y_comp'), this.#vel.getVector('x_comp'));
+    let pos = this.getPosition();
+    let s = this.getSize();
+    let angle = atan2(
+      this.getVelocity().getVector('y_comp'),
+      this.getVelocity().getVector('x_comp')
+    );
+
     push();
-    translate(this.#pos.getVector('x'), this.#pos.getVector('y'));
+    translate(pos.getVector('x'), pos.getVector('y'));
     rotate(angle);
-    ellipse(0, 0, this.#size * 2, this.#size);
-    let tailWidth = this.#size * 1.5;
-    let tailHeight = this.#size;
-    triangle(-this.#size, 0, -this.#size - tailWidth, -tailHeight / 2, -this.#size - tailWidth, tailHeight / 2);
+    let wiggle = sin(frameCount * 0.3) * 0.1;
+    scale(1 + wiggle, 1);
+
+    fill(this.#color);
+    noStroke();
+    ellipse(0, 0, s * 2.2, s);
+
+    let tailWag = sin(frameCount * 0.3) * 5;
+    fill(this.#color);
+    triangle(-s, 0, -s - 8, tailWag, -s - 8, -tailWag);
     pop();
   }
 }
@@ -127,15 +138,27 @@ class PredatorFish extends Fish {
   }  
 
   appear() {
-    fill(this.#PredatorColor);
-    let angle = atan2(this.getVelocity().getVector('y_comp'), this.getVelocity().getVector('x_comp'));
+    let pos = this.getPosition();
+    let s = this.getSize() * 1.6; 
+    let angle = atan2(
+      this.getVelocity().getVector('y_comp'),
+      this.getVelocity().getVector('x_comp')
+    );
+
     push();
-    translate(this.getPosition().getVector('x'), this.getPosition().getVector('y'));
+    translate(pos.getVector('x'), pos.getVector('y'));
     rotate(angle);
-    ellipse(0, 0, this.getSize() * 3, this.getSize());
-    let tailWidth = this.getSize() * 2;
-    let tailHeight = this.getSize() * 1.5;
-    triangle(-this.getSize(), 0, -this.getSize() - tailWidth, -tailHeight / 2, -this.getSize() - tailWidth, tailHeight / 2);
+
+    let bodyWiggle = sin(frameCount * 0.2) * 0.15;
+    scale(1 + bodyWiggle, 1);
+
+    fill(this.#PredatorColor);
+    noStroke();
+    ellipse(0, 0, s * 2.4, s * 0.9);
+
+    let tailSway = sin(frameCount * 0.2) * 7;
+    fill(this.#PredatorColor);
+    triangle(-s, 0, -s - 12, tailSway, -s - 12, -tailSway);
     pop();
   }
 }

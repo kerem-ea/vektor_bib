@@ -61,7 +61,7 @@ function setup() {
 }
 
 function draw() {
-  background(15, 8, 50);
+  background(30, 30, 100);
 
   for (let i = 0; i < sliders.length; i++) {
     let sliderObj = sliders[i];
