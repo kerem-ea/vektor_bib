@@ -55,8 +55,8 @@ class Fish {
   }
 
   boundaryCheck() {
-    let marginX = canvasWidth / 16;
-    let marginY = canvasHeight / 16;
+    const marginX = canvasWidth / 16;
+    const marginY = canvasHeight / 16;
     if (this.#pos.getVector('x') - this.#size < marginX || this.#pos.getVector('x') + this.#size > canvasWidth - marginX) {
       this.#vel.setVector('x_comp', -this.#vel.getVector('x_comp'));
       this.#pos.setVector('x', constrain(this.#pos.getVector('x'), this.#size + marginX, canvasWidth - this.#size - marginX));
@@ -91,7 +91,7 @@ class PredatorFish extends Fish {
   }
 
   chase(fishArray) {
-    let chaseRadius = 150;
+    const chaseRadius = 150;
     let predatorPos = this.getPosition();
   
     let nearestPrey = null;
