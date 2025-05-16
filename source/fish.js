@@ -44,19 +44,13 @@ class Fish {
   }
 
   limitSpeed() {
-    let speed = this.#vel.getVector('length');
-    
-    let maxSpeed = this instanceof PredatorFish ? 2 : 6;
-    let minSpeed = 2;
-  
-    if (speed > maxSpeed) {
-      let scale = maxSpeed / speed;
-      this.#vel = this.#vel.scalar(scale);
-    } 
-    
-    else if (speed < minSpeed) {
-      let scale = minSpeed / speed;
-      this.#vel = this.#vel.scalar(scale);
+    const speed = this.#vel.getVector('length');
+    const isPredator = this instanceof PredatorFish;
+    const minSpeed = 2;
+    const maxSpeed = isPredator ? 2 : 6;
+    if (speed > maxSpeed || speed < minSpeed) {
+      const target = speed > maxSpeed ? maxSpeed : minSpeed;
+      this.#vel = this.#vel.scalar(target / speed);
     }
   }
 
