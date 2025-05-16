@@ -71,8 +71,8 @@ class Vector {
     }    
 
     subtract(inputVector) {
-        let subXComp = inputVector.getVector('x_comp') - this.getVector('x_comp');
-        let subYComp = inputVector.getVector('y_comp') - this.getVector('y_comp');
+        let subXComp = this.getVector('x_comp') - inputVector.getVector('x_comp');
+        let subYComp = this.getVector('y_comp') - inputVector.getVector('y_comp');
         let subVector = new Vector(
             this.getVector('x'), this.getVector('y'),
             subXComp, subYComp
