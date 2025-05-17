@@ -108,7 +108,7 @@ class Fish {
 
     let dot = myVel.dotProduct(directionToOther);
 
-    return dot > 0; 
+    return dot > -0.3; 
   }
 }
 
